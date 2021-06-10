@@ -101,7 +101,7 @@
   real(kind=4)    :: r4head(nheader/4)  ! 4-byte-real
   !equivalence (i2head,i4head,r4head)    ! share the same 240-byte-memory
   double precision :: hxir(NGLLX),hpxir(NGLLX),hetar(NGLLY),hpetar(NGLLY),hgammar(NGLLZ),hpgammar(NGLLZ)
-
+  integer :: ntshift
 #ifdef DEBUG_COUPLED
     include "../../../add_to_compute_add_sources_viscoelastic_2.F90"
 #endif
@@ -132,7 +132,10 @@
 
           !! VM VM add external source time function
           if (EXTERNAL_STF) then
-            stf = user_source_time_function(it, isource)
+            !stf = user_source_time_function(it, isource)
+            !ntshift=int( dble(it-1)*DT - t0 - tshift_src(isource))
+            ntshift=int( ( dble(it-1)*DT - tshift_src(isource) )/DT) + 1
+            stf = user_source_time_function(ntshift, isource)
           endif
 
           ! distinguishes between single and double precision for reals
@@ -555,7 +558,7 @@
   real(kind=4)    :: r4head(nheader/4)  ! 4-byte-real
   !equivalence (i2head,i4head,r4head)    ! share the same 240-byte-memory
   double precision :: hxir(NGLLX),hpxir(NGLLX),hetar(NGLLY),hpetar(NGLLY),hgammar(NGLLZ),hpgammar(NGLLZ)
-
+  integer :: ntshift
 #ifdef DEBUG_COUPLED
     include "../../../add_to_compute_add_sources_viscoelastic_2.F90"
 #endif
@@ -577,7 +580,10 @@
 
         !! VM VM add external source time function
         if (EXTERNAL_STF) then
-           stf = user_source_time_function(it, isource)
+           !stf = user_source_time_function(it, isource)
+           !ntshift=int( dble(it-1)*DT - t0 - tshift_src(isource))
+           ntshift=int( ( dble(it-1)*DT - tshift_src(isource) )/DT) + 1
+           stf = user_source_time_function(ntshift, isource)
         endif
 
         ! stores precomputed source time function factor

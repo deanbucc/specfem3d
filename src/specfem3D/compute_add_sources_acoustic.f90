@@ -90,7 +90,8 @@
   real(kind=4)    :: r4head(nheader/4)  ! 4-byte-real
   !equivalence (i2head,i4head,r4head)    ! share the same 240-byte-memory
   double precision :: hxir(NGLLX), hpxir(NGLLX), hetar(NGLLY), hpetar(NGLLY),hgammar(NGLLZ), hpgammar(NGLLZ)
-
+  ! number of time steps shift
+  integer :: ntshift
 ! forward simulations
   if (SIMULATION_TYPE == 1 .and. nsources_local > 0) then
 
@@ -115,7 +116,14 @@
 
           !! VM VM add external source time function
           if (EXTERNAL_STF) then
-            stf = user_source_time_function(it, isource)
+            !stf = user_source_time_function(it, isource)
+            !ntshift=int( dble(it-1)*DT - t0 - tshift_src(isource))
+            ntshift=int( ( dble(it-1)*DT - tshift_src(isource) )/DT) + 1
+            if(ntshift.lt.1)then
+              stf = 0.d0
+            else
+              stf = user_source_time_function(ntshift, isource)
+            endif
           endif
 
           ! distinguishes between single and double precision for reals
@@ -481,7 +489,7 @@
   real(kind=4)    :: r4head(nheader/4)  ! 4-byte-real
   !equivalence (i2head,i4head,r4head)    ! share the same 240-byte-memory
   double precision :: hxir(NGLLX), hpxir(NGLLX), hetar(NGLLY), hpetar(NGLLY),hgammar(NGLLZ), hpgammar(NGLLZ)
-
+  integer :: ntshift
 ! forward simulations
   if (SIMULATION_TYPE == 1 .and. nsources_local > 0) then
 
@@ -499,7 +507,10 @@
 
         !! VM VM add external source time function
         if (EXTERNAL_STF) then
-           stf = user_source_time_function(it, isource)
+           !stf = user_source_time_function(it, isource)
+           !ntshift=int( dble(it-1)*DT - t0 - tshift_src(isource))
+           ntshift=int( ( dble(it-1)*DT - tshift_src(isource) )/DT) + 1
+           stf = user_source_time_function(ntshift, isource)
         endif
 
         ! stores precomputed source time function factor

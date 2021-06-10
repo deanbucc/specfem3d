@@ -87,7 +87,7 @@
   integer :: irec_local,irec
   real(kind=CUSTOM_REAL) :: phil,tortl,rhol_s,rhol_f,rhol_bar
   real(kind=CUSTOM_REAL) :: fac_s,fac_w
-
+  integer :: ntshift
 ! forward simulations
   if (SIMULATION_TYPE == 1) then
 
@@ -111,7 +111,10 @@
 
           !! VM VM add external source time function
           if (EXTERNAL_STF) then
-            stf = user_source_time_function(it, isource)
+            !stf = user_source_time_function(it, isource)
+            !ntshift=int( dble(it-1)*DT - t0 - tshift_src(isource))
+            ntshift=int( ( dble(it-1)*DT - tshift_src(isource) )/DT) + 1
+            stf = user_source_time_function(ntshift, isource)
           endif
 
           ! distinguishes between single and double precision for reals
