@@ -510,7 +510,11 @@
            !stf = user_source_time_function(it, isource)
            !ntshift=int( dble(it-1)*DT - t0 - tshift_src(isource))
            ntshift=int( ( dble(it-1)*DT - tshift_src(isource) )/DT) + 1
-           stf = user_source_time_function(ntshift, isource)
+           if(ntshift.lt.1)then
+             stf = 0.d0
+           else
+             stf = user_source_time_function(ntshift, isource)
+           endif
         endif
 
         ! stores precomputed source time function factor
