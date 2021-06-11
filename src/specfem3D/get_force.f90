@@ -88,6 +88,7 @@
     stop 'Error opening FORCESOLUTION file'
   endif
 
+  !print*,NSOURCES
 ! read source number isource
   do isource = 1,NSOURCES
 
