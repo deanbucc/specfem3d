@@ -44,7 +44,7 @@
   use specfem_par, only: USE_FORCE_POINT_SOURCE,USE_RICKER_TIME_FUNCTION, &
       UTM_PROJECTION_ZONE,SUPPRESS_UTM_PROJECTION, &
       factor_force_source,comp_dir_vect_source_E,comp_dir_vect_source_N,comp_dir_vect_source_Z_UP, &
-      user_source_time_function,NSTEP_STF,NSOURCES_STF,EXTERNAL_STF,USE_TRICK_FOR_BETTER_PRESSURE
+      stf_type,user_source_time_function,NSTEP_STF,NSOURCES_STF,EXTERNAL_STF,USE_TRICK_FOR_BETTER_PRESSURE
 
   implicit none
 
@@ -194,7 +194,7 @@
       ! only master process reads in FORCESOLUTION file
       call get_force(tshift_src,hdur,lat,long,depth,NSOURCES,min_tshift_src_original,factor_force_source, &
                      comp_dir_vect_source_E,comp_dir_vect_source_N,comp_dir_vect_source_Z_UP, &
-                     user_source_time_function)
+                     stf_type,user_source_time_function)
     endif
     ! broadcasts specific point force infos
     call bcast_all_dp(factor_force_source,NSOURCES)
@@ -219,6 +219,7 @@
   call bcast_all_dp(long,NSOURCES)
   call bcast_all_dp(depth,NSOURCES)
   call bcast_all_singledp(min_tshift_src_original)
+  call bcast_all_i(stf_type,NSOURCES)
   call bcast_all_cr(user_source_time_function,NSOURCES_STF*NSTEP_STF)
 
   ! define topology of the control element

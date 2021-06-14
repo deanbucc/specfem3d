@@ -26,7 +26,7 @@
 !=====================================================================
 
   subroutine get_force(tshift_force,hdur,lat,long,depth,NSOURCES,min_tshift_force_original,factor_force_source, &
-                      comp_dir_vect_source_E,comp_dir_vect_source_N,comp_dir_vect_source_Z_UP,user_source_time_function)
+                      comp_dir_vect_source_E,comp_dir_vect_source_N,comp_dir_vect_source_Z_UP,stf_type,user_source_time_function)
 
   use constants, only: IIN,IN_DATA_FILES,MAX_STRING_LEN,TINYVAL,mygroup,CUSTOM_REAL
   use shared_parameters, only: NUMBER_OF_SIMULTANEOUS_RUNS,EXTERNAL_STF,NSTEP_STF,NSOURCES_STF
@@ -42,6 +42,7 @@
   double precision, dimension(NSOURCES), intent(out) :: comp_dir_vect_source_E
   double precision, dimension(NSOURCES), intent(out) :: comp_dir_vect_source_N
   double precision, dimension(NSOURCES), intent(out) :: comp_dir_vect_source_Z_UP
+  integer, dimension(NSOURCES), intent(out) :: stf_type
   !! VM VM use NSTEP_STF, NSOURCES_STF which are always rigth :
   !! in case of EXTERNAL_STF, it's equal to NSTEP,NSOURCES
   !! when .not. EXTERNAL_STF it' equal to 1,1.
@@ -142,6 +143,10 @@
     ! read direction vector's vertical component
     read(IIN,"(a)") string
     read(string(32:len_trim(string)),*) comp_dir_vect_source_Z_UP(isource)
+    
+    ! read internal source time function type
+    read(IIN,"(a)") string
+    read(string(31:len_trim(string)),*) stf_type(isource)
 
     ! reads USER EXTERNAL SOURCE if needed
     if (EXTERNAL_STF) then

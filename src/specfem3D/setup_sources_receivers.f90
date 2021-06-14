@@ -105,6 +105,7 @@
            hdur_Gaussian(NSOURCES), &
            utm_x_source(NSOURCES), &
            utm_y_source(NSOURCES), &
+           stf_type(NSOURCES), &
            nu_source(3,3,NSOURCES), stat=ier)
   if (ier /= 0) stop 'error allocating arrays for sources'
 

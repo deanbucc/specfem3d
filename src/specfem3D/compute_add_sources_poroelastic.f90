@@ -381,7 +381,7 @@
 
 ! returns source time function value for specified time
 
-  use specfem_par, only: USE_FORCE_POINT_SOURCE,USE_RICKER_TIME_FUNCTION,hdur,hdur_Gaussian,DT
+  use specfem_par, only: USE_FORCE_POINT_SOURCE,USE_RICKER_TIME_FUNCTION,hdur,hdur_Gaussian,stf_type,DT
 
   implicit none
 
@@ -405,7 +405,7 @@
     else
       ! Gaussian
       ! use a very small duration of 5*DT to mimic a Dirac in time
-      stf = comp_source_time_function_gauss(time_source_dble,5.d0*DT)
+      stf = comp_source_time_function_gauss(time_source_dble,5.d0*DT,stf_type(isource))
     endif
   else
     ! moment-tensor
@@ -415,7 +415,7 @@
     else
       ! Gaussian
       ! since the source is a bulk source (applied to both fluid and solid parts)
-      stf = comp_source_time_function_gauss(time_source_dble,hdur_Gaussian(isource))
+      stf = comp_source_time_function_gauss(time_source_dble,hdur_Gaussian(isource),stf_type(isource))
     endif
   endif ! USE_FORCE_POINT_SOURCE
 

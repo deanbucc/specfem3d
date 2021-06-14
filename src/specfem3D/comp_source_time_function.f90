@@ -43,14 +43,15 @@
 !-------------------------------------------------------------------------------------------------
 !
 
-  double precision function comp_source_time_function_gauss(t,hdur)
+  double precision function comp_source_time_function_gauss(t,hdur,stf_type)
 
   use constants, only: PI
 
   implicit none
 
   double precision, intent(in) :: t,hdur
-  double precision :: hdur_decay,a
+  integer, intent(in) :: stf_type
+  double precision :: hdur_decay,a,f,factor
 
   ! note: hdur given is hdur_Gaussian = hdur/SOURCE_DECAY_MIMIC_TRIANGLE
   !           and SOURCE_DECAY_MIMIC_TRIANGLE ~ 1.68
@@ -63,9 +64,24 @@
   ! note: a nonzero time to start the simulation with would lead to more high-frequency noise
   !          due to the (spatial) discretization of the point source on the mesh
 
+
+  f = 1.d0 / hdur_decay
+  factor = (PI*f*t)*(PI*f*t)
   ! Gaussian wavelet
-  a = 1.d0 / (hdur_decay**2)
-  comp_source_time_function_gauss = exp(-a*t**2) / (sqrt(PI)*hdur_decay)
+  if(stf_type==0)then
+    ! Default
+    a = f*f !1.d0 / (hdur_decay**2)
+    comp_source_time_function_gauss = exp(-a*t**2) / (sqrt(PI)*hdur_decay)
+  elseif(stf_type==1)then
+    ! Gaussian with maximum amplitiude 1
+    comp_source_time_function_gauss = exp(-factor)
+  elseif(stf_type==2)then
+    ! Gaussian with integration 1
+    comp_source_time_function_gauss = sqrt(PI)*f*exp(-factor)
+  else
+    write(*,*)'Undefined internal source time function:',stf_type
+    stop
+  endif
 
   end function comp_source_time_function_gauss
 
@@ -73,14 +89,15 @@
 !-------------------------------------------------------------------------------------------------
 !
 
-  double precision function comp_source_time_function_dgau(t,hdur)
+  double precision function comp_source_time_function_dgau(t,hdur,stf_type)
 
   use constants, only: PI
 
   implicit none
 
   double precision, intent(in) :: t,hdur
-  double precision :: hdur_decay,a
+  integer, intent(in) :: stf_type
+  double precision :: hdur_decay,a,f,factor
 
   ! note: hdur given is hdur_Gaussian = hdur/SOURCE_DECAY_MIMIC_TRIANGLE
   !           and SOURCE_DECAY_MIMIC_TRIANGLE ~ 1.68
@@ -93,9 +110,21 @@
   ! note: a nonzero time to start the simulation with would lead to more high-frequency noise
   !          due to the (spatial) discretization of the point source on the mesh
 
+  f = 1.d0 / hdur_decay
+  factor = (PI*f*t)*(PI*f*t)
   ! first derivative of a Gaussian wavelet
-  a = 1.d0 / (hdur_decay**2)
-  comp_source_time_function_dgau = - 2.d0 * a * t * exp(-a*t**2) / (sqrt(PI)*hdur_decay)
+  if(stf_type==0)then
+    a = 1.d0 / (hdur_decay**2)
+    comp_source_time_function_dgau = - 2.d0 * a * t * exp(-a*t**2) / (sqrt(PI)*hdur_decay)
+  elseif(stf_type==1)then
+    comp_source_time_function_dgau = -2.d0*PI*PI*f*f*t*(exp(-factor))
+  elseif(stf_type==2)then
+    comp_source_time_function_dgau = -2.d0*sqrt(PI)*f*PI*PI*f*f*t*(exp(-factor))
+  else
+    write(*,*)'Undefined internal source time function:',stf_type
+    stop
+  endif
+    
 
   end function comp_source_time_function_dgau
 
@@ -103,14 +132,15 @@
 !-------------------------------------------------------------------------------------------------
 !
 
-  double precision function comp_source_time_function_d2gau(t,hdur)
+  double precision function comp_source_time_function_d2gau(t,hdur,stf_type)
 
   use constants, only: PI
 
   implicit none
 
   double precision, intent(in) :: t,hdur
-  double precision :: hdur_decay,a
+  integer, intent(in) :: stf_type
+  double precision :: hdur_decay,a,f,factor
 
   ! note: hdur given is hdur_Gaussian = hdur/SOURCE_DECAY_MIMIC_TRIANGLE
   !           and SOURCE_DECAY_MIMIC_TRIANGLE ~ 1.68
@@ -123,9 +153,23 @@
   ! note: a nonzero time to start the simulation with would lead to more high-frequency noise
   !          due to the (spatial) discretization of the point source on the mesh
 
+  f = 1.d0 / hdur_decay
+  factor = (PI*f*t)*(PI*f*t)
   ! second derivative of a Gaussian wavelet
-  a = 1.d0 / (hdur_decay**2)
-  comp_source_time_function_d2gau = 2.d0 * a * (-1.d0 + 2.d0*a*t**2) * exp(-a*t**2) / (sqrt(PI)*hdur_decay)
+  if(stf_type==0)then
+    a = 1.d0 / (hdur_decay**2)
+    comp_source_time_function_d2gau = 2.d0 * a * (-1.d0 + 2.d0*a*t**2) * exp(-a*t**2) / (sqrt(PI)*hdur_decay)
+  elseif(stf_type==1)then
+    comp_source_time_function_d2gau = 2.d0*PI*PI*f*f*(-1.d0 + 2.d0*PI*PI*f*f*t**2) * exp(-factor)
+
+  elseif(stf_type==2)then
+    comp_source_time_function_d2gau = 2.d0*sqrt(PI)*PI*PI*f**3*(-1.d0 + 2.d0*PI*PI*f*f*t**2) * exp(-factor)
+  
+  else
+    write(*,*)'Undefined internal source time function:',stf_type
+    stop
+  endif
+
 
   end function comp_source_time_function_d2gau
 

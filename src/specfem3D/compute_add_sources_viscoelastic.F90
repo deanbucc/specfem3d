@@ -815,7 +815,7 @@
 
 ! returns source time function value for specified time
 
-  use specfem_par, only: USE_FORCE_POINT_SOURCE,USE_RICKER_TIME_FUNCTION,hdur,hdur_Gaussian
+  use specfem_par, only: USE_FORCE_POINT_SOURCE,USE_RICKER_TIME_FUNCTION,hdur,hdur_Gaussian,stf_type
 
   implicit none
 
@@ -841,7 +841,7 @@
       ! stf = comp_source_time_function_gauss(time_source_dble,5.d0*DT)
       !! COMMENTED BY FS FS -> do no longer use hard-coded hdur_Gaussian = 5*DT, but actual value of hdur_Gaussian
 
-      stf = comp_source_time_function_gauss(time_source_dble,hdur_Gaussian(isource))
+      stf = comp_source_time_function_gauss(time_source_dble,hdur_Gaussian(isource),stf_type(isource))
       !! ADDED BY FS FS -> use actual value of hdur_Gaussian as half duration
     endif
   else

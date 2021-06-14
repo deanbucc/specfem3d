@@ -110,6 +110,7 @@ module specfem_par
   double precision, dimension(:), allocatable :: xi_source,eta_source,gamma_source
   double precision, dimension(:), allocatable :: tshift_src,hdur,hdur_Gaussian
   double precision, dimension(:), allocatable :: utm_x_source,utm_y_source
+  integer, dimension(:), allocatable :: stf_type
   double precision, external :: comp_source_time_function
   double precision :: t0
   real(kind=CUSTOM_REAL) :: stf_used_total
