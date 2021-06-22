@@ -737,9 +737,11 @@
 ! thus in fluid elements potential_dot_dot_acoustic() is accurate at zeroth order while potential_acoustic()
 ! is accurate at second order and thus contains significantly less numerical noise.
       if (USE_TRICK_FOR_BETTER_PRESSURE) then
-        stf = comp_source_time_function_d2gau(time_source_dble,5.d0*DT,stf_type(isource))
+        !stf = comp_source_time_function_d2gau(time_source_dble,5.d0*DT,stf_type(isource))
+        stf = comp_source_time_function_d2gau(time_source_dble,hdur_Gaussian(isource),stf_type(isource))
       else
-        stf = comp_source_time_function_gauss(time_source_dble,5.d0*DT,stf_type(isource))
+        !stf = comp_source_time_function_gauss(time_source_dble,5.d0*DT,stf_type(isource))
+        stf = comp_source_time_function_gauss(time_source_dble,hdur_Gaussian(isource),stf_type(isource))
       endif
     endif
 
