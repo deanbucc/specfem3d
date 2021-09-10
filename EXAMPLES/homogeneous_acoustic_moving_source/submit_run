@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=4
+#SBATCH --mem=5gb
+#SBATCH -t 02:00:00
+#SBATCH --qos=privileged
+#Load appropriate compilers
+source ~/.bashrc
+cd /global/home/hpc4872/work/Examples/specfem3d/EXAMPLES/homog_acoustic_moving_source_20k
+#Problems with mpiexec/mpirun so use srun\
+mpirun -n 4 ./bin/xspecfem3D
