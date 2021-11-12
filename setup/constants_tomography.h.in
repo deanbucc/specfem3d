@@ -78,7 +78,7 @@
   logical :: PRINT_STATISTICS_FILES = .false.
 
   ! maximum number of kernel paths
-  integer, parameter :: MAX_KERNEL_PATHS = 10000
+  integer, parameter :: MAX_KERNEL_PATHS = 100 !10000
 
 !!-----------------------------------------------------------
 !!

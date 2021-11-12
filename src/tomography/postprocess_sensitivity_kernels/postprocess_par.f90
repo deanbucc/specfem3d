@@ -32,8 +32,8 @@ module postprocess_par
 
   implicit none
 
-  integer,parameter :: MAX_KERNEL_NAMES = 255
-  integer,parameter :: MAX_KERNEL_PATHS = 65535
+  integer,parameter :: MAX_KERNEL_NAMES = 100 !255
+  integer,parameter :: MAX_KERNEL_PATHS = 100 !65535
 
   ! mesh size
   integer :: NSPEC, NGLOB
