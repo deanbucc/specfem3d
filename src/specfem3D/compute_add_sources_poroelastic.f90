@@ -406,7 +406,7 @@
       ! Gaussian
       ! use a very small duration of 5*DT to mimic a Dirac in time
       !stf = comp_source_time_function_gauss(time_source_dble,5.d0*DT,stf_type(isource))
-      stf = comp_source_time_function_gauss(time_source_dble,hdur_Gaussian,stf_type(isource))
+      stf = comp_source_time_function_gauss(time_source_dble,hdur_Gaussian(isource),stf_type(isource))
     endif
   else
     ! moment-tensor
